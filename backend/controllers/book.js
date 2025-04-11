@@ -2,13 +2,13 @@ import { Book } from "../models/bookModel.js";
 
 export const addBook = async (req, res) => {
   try {
-    const {title, author, genre, city, owner} = req.body;
+    const {title, author, genre, city, userId} = req.body;
 
     const book = new Book({ 
         title, 
         author, 
         city, 
-        owner,
+        owner: userId,
         status: "Available"
     });
     if(genre) {
@@ -33,7 +33,7 @@ export const getBooks = async (req, res) => {
     const books = await Book.find({})
     .populate({
       path: 'owner',
-      select: 'mobile'
+      select: 'mobile email',
     });
     
     return res.status(200).json({ 
@@ -48,6 +48,26 @@ export const getBooks = async (req, res) => {
   }
 };
 
+export const getBooksById = async (req, res) => {
+  try {
+    const {id} = req.params;
+    const books = await Book.find({owner: id})
+    .populate({
+      path: 'owner',
+      select: 'mobile email',
+    });
+    
+    return res.status(200).json({ 
+        message: 'Books found', 
+        books 
+    });
+  } catch (error) {
+    return res.status(400).json({ 
+      message: 'Error finding books', 
+      error: err.message 
+  });
+  }
+}
 export const updateStatus = async (req, res) => {
   const { id } = req.params;
   const { status } = req.body;

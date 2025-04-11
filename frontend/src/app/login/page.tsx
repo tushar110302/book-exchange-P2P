@@ -1,5 +1,7 @@
 "use client"
+import axios from 'axios';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'
 
 function Login() {
@@ -7,10 +9,20 @@ function Login() {
         email: '',
         password: '',
     });
+    const router = useRouter();
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        console.log(formData);
+    const handleSubmit = async(e: React.FormEvent) => {
+        try {
+            e.preventDefault();
+            const response = await axios.post('http://localhost:4000/api/users/login', formData);
+
+            // console.log("response",response.data.user); 
+            localStorage.setItem("user", JSON.stringify(response.data.user));
+            router.push('/dashboard');
+            
+        } catch (error: any) {
+            console.log("Login error", error);
+        }        
     }
 
     const handleChange = (e: any) => {

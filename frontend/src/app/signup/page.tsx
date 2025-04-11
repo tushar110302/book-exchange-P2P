@@ -1,6 +1,8 @@
 "use client"
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'
+import axios from 'axios';
 
 function Signup() {
     const [formData, setFormData] = useState({
@@ -10,10 +12,18 @@ function Signup() {
         password: '',
         role: 'Seeker'
     });
+    const router = useRouter();
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        console.log(formData)
+    const handleSubmit = async (e: React.FormEvent) => {
+        try {
+            e.preventDefault();
+            const response = await axios.post('http://localhost:4000/api/users/signup', formData);
+            console.log(response);
+            router.push('/login');
+        } catch (error: any) {
+            console.log("Signup error", error);
+        }
+        
     }
 
     const handleChange = (e: any) => {
