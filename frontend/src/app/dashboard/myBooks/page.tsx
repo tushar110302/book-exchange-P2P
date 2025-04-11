@@ -34,7 +34,7 @@ function myBooks() {
             <p className="text-center text-gray-500">No books found.</p>
         ) : (
             <>
-            <BookList books={books} />
+                <BookList books={books} canUpdateStatus />
             </>
         )}
     </div>
