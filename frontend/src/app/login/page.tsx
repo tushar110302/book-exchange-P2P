@@ -3,9 +3,10 @@ import axios from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'
+import { LoginFormData } from '@/types';
 
 function Login() {
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<LoginFormData>({
         email: '',
         password: '',
     });
@@ -20,12 +21,12 @@ function Login() {
             localStorage.setItem("user", JSON.stringify(response.data.user));
             router.push('/dashboard');
             
-        } catch (error: any) {
+        } catch (error) {
             console.log("Login error", error);
         }        
     }
 
-    const handleChange = (e: any) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({
             ...prev,

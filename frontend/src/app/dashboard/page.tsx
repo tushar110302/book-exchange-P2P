@@ -1,13 +1,13 @@
 'use client';
 import BookList from '@/components/BookList';
+import { Book, User } from '@/types';
 import axios from 'axios';
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 export default function Dashboard() {
-    const [books, setBooks] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    const [books, setBooks] = useState<Book[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [user, setUser] = useState<User | null>(null);
 
     const fetchBooks = async () => {
         try {
@@ -22,7 +22,11 @@ export default function Dashboard() {
     };
 
     useEffect(() => {
-        fetchBooks();
+      const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+          setUser(JSON.parse(storedUser));
+        }
+      fetchBooks();
     }, []);
 
     if(!user){

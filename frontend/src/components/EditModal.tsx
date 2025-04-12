@@ -2,8 +2,9 @@
 
 import axios from "axios";
 import React, { useState, useEffect } from "react";
+import { EditModalProps } from "@/types";
 
-const EditBookModal = ({ book, isOpen, onClose, onUpdate }: any) => {
+const EditBookModal = ({ book, isOpen, onClose, onUpdate }: EditModalProps) => {
   const [formData, setFormData] = useState({
     title: "",
     author: "",

@@ -1,10 +1,18 @@
 "use client"
 import Link from 'next/link'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { User } from '@/types';
 
 function Navbar() {
+  const [user, setUser] = useState<User | null>(null);
 
-    const user = JSON.parse(localStorage.getItem("user") || "{}");
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
   return (
     <nav className='flex justify-end'>
         <Link href={'/dashboard'} className='text-white mr-4 p-2 outline rounded-md'>

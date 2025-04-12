@@ -1,11 +1,12 @@
 import axios from 'axios';
 import React, { useState } from 'react'
 import EditBookModal from './EditModal';
+import { Book } from '@/types';
 
-function BookList({books, canUpdateStatus=false}: any) {
-    const [bookList, setBookList] = useState(books);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedBook, setSelectedBook] = useState(null);
+function BookList({books, canUpdateStatus=false}: {books: Book[], canUpdateStatus?: boolean}) {
+    const [bookList, setBookList] = useState<Book[]>(books);
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const [selectedBook, setSelectedBook] = useState<Book | null>(null);
 
     const handleStatusToggle = async (bookId: string, currentStatus: string) => {
 
@@ -15,8 +16,8 @@ function BookList({books, canUpdateStatus=false}: any) {
                 { status: newStatus});
 
             console.log(res);
-            setBookList((prevBooks: any) =>
-                prevBooks.map((book: any) =>
+            setBookList((prevBooks: Book[]) =>
+                prevBooks.map((book: Book) =>
                   book._id === bookId ? { ...book, status: newStatus } : book
                 )
               );
@@ -25,14 +26,14 @@ function BookList({books, canUpdateStatus=false}: any) {
         }
     }
 
-    const handleEdit = (book: any) => {
+    const handleEdit = (book: Book) => {
         setSelectedBook(book);
         setIsModalOpen(true);
     }
 
-    const handleUpdate = (updatedBook: any) => {
-        setBookList((prevBooks: any) =>
-          prevBooks.map((book: any) =>
+    const handleUpdate = (updatedBook: Book) => {
+        setBookList((prevBooks: Book []) =>
+          prevBooks.map((book: Book) =>
             book._id === updatedBook._id ? updatedBook : book
           )
         );
@@ -41,7 +42,7 @@ function BookList({books, canUpdateStatus=false}: any) {
     const handleDelete = async (bookId: string) => {
         try {
             await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/books/deleteBook/${bookId}`);
-            setBookList((prevBooks: any) => prevBooks.filter((book: any) => book._id !== bookId));
+            setBookList((prevBooks: Book[]) => prevBooks.filter((book: Book) => book._id !== bookId));
         } catch (err) {
             console.error('Error deleting book:', err);
         }
@@ -67,9 +68,9 @@ function BookList({books, canUpdateStatus=false}: any) {
         </div>
 
         <div className="w-[94%]">
-            {bookList.map((book:any) => (
-                <div className='flex gap-2 items-center'>
-                    <div key={book._id} className="w-full py-4 mt-2 flex rounded-lg  bg-gray-900 ">
+            {bookList.map((book: Book) => (
+                <div className='flex gap-2 items-center' key={book._id}>
+                    <div  className="w-full py-4 mt-2 flex rounded-lg  bg-gray-900 ">
                         <div className="w-1/6  border-r border-slate-500 text-center">{book.title}</div>
                         <div className="w-1/6  border-r border-slate-500 text-center">{book.author}</div>
                         <div className="w-1/6  border-r border-slate-500 text-center">{book.genre ? book.genre : 'N/A'}</div>

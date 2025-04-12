@@ -3,9 +3,10 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'
 import axios from 'axios';
+import { SignupFormData } from '@/types';
 
 function Signup() {
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<SignupFormData>({
         name:'',
         email: '',
         mobile: '',
@@ -20,13 +21,13 @@ function Signup() {
             const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/signup`, formData);
             console.log(response);
             router.push('/login');
-        } catch (error: any) {
+        } catch (error) {
             console.log("Signup error", error);
         }
         
     }
 
-    const handleChange = (e: any) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({
             ...prev,
