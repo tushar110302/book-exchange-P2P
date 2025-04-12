@@ -39,7 +39,7 @@ export default function AddBookPage() {
             return;
         }
         const payload = { ...formData, userId: user._id };
-        const res = await axios.post('http://localhost:4000/api/books/addBook', payload);
+        const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/books/addBook`, payload);
         console.log(res.data.book);
         router.push('/dashboard');
     };

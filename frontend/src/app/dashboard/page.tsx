@@ -4,20 +4,6 @@ import axios from 'axios';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
-// type Book = {
-//   _id: string;
-//   title: string;
-//   author: string;
-//   genre?: string;
-//   location: string;
-//   contactEmail: string;
-//   contactPhone: string;
-//   status: 'available' | 'rented';
-//   owner: {
-//     name: string;
-//   };
-// };
-
 export default function Dashboard() {
     const [books, setBooks] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -25,7 +11,7 @@ export default function Dashboard() {
 
     const fetchBooks = async () => {
         try {
-            const res = await axios.get('http://localhost:4000/api/books/getBooks');
+            const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/books/getBooks`);
             // console.log(res)
             setBooks(res.data.books);
         } catch (err) {

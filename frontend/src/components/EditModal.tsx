@@ -31,12 +31,12 @@ const EditBookModal = ({ book, isOpen, onClose, onUpdate }: any) => {
     if (!book) return;
 
     try {
-      const res = await axios.put(`http://localhost:4000/api/books/editBook/${book._id}`, formData);
+      const res = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/books/editBook/${book._id}`, formData);
 
       const updatedBook = res.data.updated;
       onUpdate(updatedBook);
       onClose();
-      
+
     } catch (err) {
       console.log("Error updating book:", err);
     }

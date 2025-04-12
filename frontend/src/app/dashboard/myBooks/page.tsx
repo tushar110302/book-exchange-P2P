@@ -11,7 +11,7 @@ function myBooks() {
     const fetchBooks = async () => {
         try {
             setLoading(true);
-            const res = await axios.get(`http://localhost:4000/api/books/getBooksById/${user._id}`);
+            const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/books/getBooksById/${user._id}`);
             // console.log(res)
             setBooks(res.data.books);
         } catch (err) {

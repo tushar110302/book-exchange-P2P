@@ -17,7 +17,7 @@ function Signup() {
     const handleSubmit = async (e: React.FormEvent) => {
         try {
             e.preventDefault();
-            const response = await axios.post('http://localhost:4000/api/users/signup', formData);
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/signup`, formData);
             console.log(response);
             router.push('/login');
         } catch (error: any) {

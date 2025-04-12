@@ -11,7 +11,7 @@ function BookList({books, canUpdateStatus=false}: any) {
 
         const newStatus = currentStatus === 'Available' ? 'Rented' : 'Available';
         try {
-            const res = await axios.put(`http://localhost:4000/api/books/updateStatus/${bookId}`, 
+            const res = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/books/updateStatus/${bookId}`, 
                 { status: newStatus});
 
             console.log(res);
@@ -40,7 +40,7 @@ function BookList({books, canUpdateStatus=false}: any) {
 
     const handleDelete = async (bookId: string) => {
         try {
-            await axios.delete(`http://localhost:4000/api/books/deleteBook/${bookId}`);
+            await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/books/deleteBook/${bookId}`);
             setBookList((prevBooks: any) => prevBooks.filter((book: any) => book._id !== bookId));
         } catch (err) {
             console.error('Error deleting book:', err);
