@@ -83,9 +83,57 @@ export const updateStatus = async (req, res) => {
       updated
     });
   } catch (error) {
+      return res.status(400).json({ 
+        message: 'Error updating status', 
+        error: err.message 
+      });
+  }
+};
+
+export const editBook = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, author, genre, city } = req.body;
+
+    const updated = await Book.findByIdAndUpdate(id, 
+      { $set:{
+          title, 
+          author, 
+          genre, 
+          city
+      }}, 
+      { new: true });
+  
+    console.log(updated)
+    
+    return res.status(200).json({
+      message: 'Book updated',
+      updated
+    });
+
+  } catch (error) {
     return res.status(400).json({ 
-      message: 'Error updating status', 
+      message: 'Error Editing status', 
       error: err.message 
     });
   }
-};
+
+}
+
+export const deleteBook = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deleted = await Book.findByIdAndDelete(id);
+
+    return res.status(200).json({
+      message: 'Book deleted',
+      deleted
+    });
+    
+  } catch (error) {
+    return res.status(400).json({ 
+      message: 'Error deleting book', 
+      error: err.message 
+    });
+  }
+}

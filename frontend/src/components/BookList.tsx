@@ -1,8 +1,11 @@
 import axios from 'axios';
 import React, { useState } from 'react'
+import EditBookModal from './EditModal';
 
 function BookList({books, canUpdateStatus=false}: any) {
     const [bookList, setBookList] = useState(books);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedBook, setSelectedBook] = useState(null);
 
     const handleStatusToggle = async (bookId: string, currentStatus: string) => {
 
@@ -21,10 +24,33 @@ function BookList({books, canUpdateStatus=false}: any) {
             console.error('Error updating status:', err);
         }
     }
+
+    const handleEdit = (book: any) => {
+        setSelectedBook(book);
+        setIsModalOpen(true);
+    }
+
+    const handleUpdate = (updatedBook: any) => {
+        setBookList((prevBooks: any) =>
+          prevBooks.map((book: any) =>
+            book._id === updatedBook._id ? updatedBook : book
+          )
+        );
+    }
+
+    const handleDelete = async (bookId: string) => {
+        try {
+            await axios.delete(`http://localhost:4000/api/books/deleteBook/${bookId}`);
+            setBookList((prevBooks: any) => prevBooks.filter((book: any) => book._id !== bookId));
+        } catch (err) {
+            console.error('Error deleting book:', err);
+        }
+    }
+
   return (
     <>
-    <div className=' w-[100%] mx-auto  rounded-lg bg-zinc-900 text-gray-400 ' >
-        <div className=' w-full flex justify-between py-4 text-center'>
+    <div className=' w-[100%] mx-auto   text-gray-400 ' >
+        <div className=' w-[90%] flex justify-between py-4 text-center rounded-lg bg-zinc-900'>
             <div className='w-1/6 border-r border-slate-300 flex items-center justify-center'>Title</div>
             <div className='w-1/6 border-r border-slate-300 flex items-center justify-center'>Author</div>
             <div className='w-1/6 border-r border-slate-300 flex items-center justify-center'>Location</div>
@@ -40,34 +66,56 @@ function BookList({books, canUpdateStatus=false}: any) {
         </div>
         </div>
 
-        <div className="w-[100%]">
+        <div className="w-[94%]">
             {bookList.map((book:any) => (
-                <div key={book._id} className="w-full py-4 mt-2 flex rounded-lg  bg-gray-900 ">
-                    <div className="w-1/6  border-r border-slate-500 text-center">{book.title}</div>
-                    <div className="w-1/6  border-r border-slate-500 text-center">{book.author}</div>
-                    <div className="w-1/6  border-r border-slate-500 text-center">{book.genre ? book.genre : 'N/A'}</div>
-                    <div className="w-1/6  border-r border-slate-500 text-center">{book.city}</div>
+                <div className='flex gap-2 items-center'>
+                    <div key={book._id} className="w-full py-4 mt-2 flex rounded-lg  bg-gray-900 ">
+                        <div className="w-1/6  border-r border-slate-500 text-center">{book.title}</div>
+                        <div className="w-1/6  border-r border-slate-500 text-center">{book.author}</div>
+                        <div className="w-1/6  border-r border-slate-500 text-center">{book.genre ? book.genre : 'N/A'}</div>
+                        <div className="w-1/6  border-r border-slate-500 text-center">{book.city}</div>
 
-                    <div className="w-1/6  border-r border-slate-500 text-center">
-                        <p>{book.owner.email} /</p> <p>{book.owner.mobile}</p>
+                        <div className="w-1/6  border-r border-slate-500 text-center">
+                            <p>{book.owner.email} /</p> <p>{book.owner.mobile}</p>
+                        </div>
+                        <div className="w-1/6 text-center">
+                            <p className={`font-semibold ${book.status === 'Available' ? 'text-green-500' : 'text-red-500'}`}>
+                            {book.status}
+                            </p>
+                            {canUpdateStatus && (
+                                <button
+                                    onClick={() => handleStatusToggle(book._id, book.status)}
+                                    className="text-xs mt-1 px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+                                >
+                                    Mark as {book.status === 'Available' ? 'Rented' : 'Available'}
+                                </button>
+                        )}
+                        </div>
                     </div>
-                    <div className="w-1/6 text-center">
-                        <p className={`font-semibold ${book.status === 'Available' ? 'text-green-500' : 'text-red-500'}`}>
-                        {book.status}
-                        </p>
-
+                    <div className='flex flex-col -mr-2 gap-2'>
                         {canUpdateStatus && (
-                        <button
-                            onClick={() => handleStatusToggle(book._id, book.status)}
-                            className="text-xs mt-1 px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
-                        >
-                            Mark as {book.status === 'Available' ? 'Rented' : 'Available'}
-                        </button>
+                            <button 
+                            onClick={() => handleDelete(book._id)} className='text-xs h-fit px-2 py-2 bg-red-600 text-white rounded hover:bg-red-700' >Delete</button>
+                        )}
+                        {canUpdateStatus && (
+                            <button
+                                onClick={() => handleEdit(book)}
+                                className="text-xs mt-1px-2 py-2  bg-blue-600 text-white rounded hover:bg-blue-700"
+                            >
+                                Update
+                            </button>
                         )}
                     </div>
                 </div>
             ))}
         </div>
+
+        <EditBookModal
+            book={selectedBook}
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            onUpdate={handleUpdate}
+        />
     </>
   )
 }
