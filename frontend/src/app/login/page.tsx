@@ -7,8 +7,8 @@ import { LoginFormData } from '@/types';
 
 function Login() {
     const [formData, setFormData] = useState<LoginFormData>({
-        email: '',
-        password: '',
+        email: 'test@test.com',
+        password: 'test',
     });
     const router = useRouter();
 
