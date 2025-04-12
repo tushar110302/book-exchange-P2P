@@ -50,7 +50,7 @@ function BookList({books, canUpdateStatus=false}: any) {
   return (
     <>
     <div className=' w-[100%] mx-auto   text-gray-400 ' >
-        <div className=' w-[90%] flex justify-between py-4 text-center rounded-lg bg-zinc-900'>
+        <div className={` ${canUpdateStatus ? 'w-[90%]' : 'w-[94%]'} flex justify-between py-4 text-center rounded-lg bg-zinc-900`}>
             <div className='w-1/6 border-r border-slate-300 flex items-center justify-center'>Title</div>
             <div className='w-1/6 border-r border-slate-300 flex items-center justify-center'>Author</div>
             <div className='w-1/6 border-r border-slate-300 flex items-center justify-center'>Location</div>
